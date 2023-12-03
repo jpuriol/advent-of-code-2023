@@ -6,7 +6,7 @@ fun main() {
     data class Symbol(val value: Char, val line: Int, val index: Int)
 
     fun extractNumbers(input: List<String>): List<Number> {
-        val regex = Regex("""(\d+)*""")
+        val regex = Regex("""(\d+)""")
 
         return input.flatMapIndexed { lineNum, line ->
             regex.findAll(line).mapNotNull { matchResult ->
@@ -59,15 +59,34 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val numbers = extractNumbers(input)
+        val symbols = extractSymbols(input)
+
+        val asterisks = symbols.filter { it.value == '*' }
+
+        val ratios = asterisks.mapNotNull { a ->
+            val adjacent = numbers.mapNotNull { n ->
+                when {
+                    n.line == a.line && (n.endIndex == a.index - 1 || n.startIndex == a.index + 1) -> n
+                    n.line - 1 == a.line && a.index in n.startIndex - 1..n.endIndex + 1 -> n
+                    n.line + 1 == a.line && a.index in n.startIndex - 1..n.endIndex + 1 -> n
+                    else -> null
+                }
+            }
+
+            if (adjacent.size == 2) adjacent[0].value * adjacent[1].value
+            else null
+        }
+
+        return ratios.sum()
     }
 
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day03_test")
-    check(part1(testInput) == 4361)
+    check(part2(testInput) == 6756)
 
     val input = readInput("Day03")
     part1(input).println()
-    // part2(input).println()
+    part2(input).println()
 }
