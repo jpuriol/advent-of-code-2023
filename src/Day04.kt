@@ -35,16 +35,34 @@ fun main() {
         }
     }
 
+
     fun part2(input: List<String>): Int {
-        return input.size
+        val cards = parseCards(input)
+
+        val cardsCopies = cards.associate { c ->
+            c.id to 1
+        }.toMutableMap()
+
+        for (c in cards) {
+            val copies = cardsCopies[c.id] ?: continue
+
+            (1..copies).forEach { _ ->
+                val matches = c.actual.filter { it in c.winning }.size
+                (1..matches).forEach { i ->
+                    cardsCopies[c.id + i] = cardsCopies[c.id + i]!! + 1
+                }
+            }
+        }
+
+        return cardsCopies.values.sum()
     }
 
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day04_test")
-    check(part1(testInput) == 13)
+    check(part2(testInput) == 30)
 
     val input = readInput("Day04")
     part1(input).println()
-    // part2(input).println()
+    part2(input).println()
 }
