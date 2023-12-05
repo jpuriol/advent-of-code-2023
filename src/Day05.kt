@@ -16,10 +16,11 @@ fun main() {
             val sourceRangeStart = numbers[1]
             val rangeLength = numbers[2]
 
-            (0..<rangeLength).forEach { i ->
-                val key = sourceRangeStart+i
-                if (key in validKeys) {
-                    map[sourceRangeStart+i] = destinationRangeStart+i
+            if (validKeys.find { sourceRangeStart <= it && it <= sourceRangeStart+rangeLength } != null) {
+                (0..<rangeLength).forEach { i ->
+                    val key = sourceRangeStart+i
+                    if (key in validKeys)
+                        map[key] = destinationRangeStart+i
                 }
             }
 
@@ -66,43 +67,49 @@ fun main() {
                         parseMap(input.slice(index+1..<input.size), seeds)
                     seedToSoil = map
                     skipUntilLine = index+linesToSkip
-                    println("seedToSoil done")
+                    println("seed-to-soil done!")
                 }
                 "soil-to-fertilizer map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), seedToSoil.values.toList())
                     soilToFertilizer = map
                     skipUntilLine = index+linesToSkip
+                    println("soil-to-fertilizer done!")
                 }
                 "fertilizer-to-water map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), soilToFertilizer.values.toList())
                     fertilizerToWater = map
                     skipUntilLine = index+linesToSkip
+                    println("fertilizer-to-water done!")
                 }
                 "water-to-light map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), fertilizerToWater.values.toList())
                     waterToLight = map
                     skipUntilLine = index+linesToSkip
+                    println("water-to-light done!")
                 }
                 "light-to-temperature map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), waterToLight.values.toList())
                     lightToTemperature = map
                     skipUntilLine = index+linesToSkip
+                    println("light-to-temperature done!")
                 }
                 "temperature-to-humidity map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), lightToTemperature.values.toList())
                     temperatureToHumidity = map
                     skipUntilLine = index+linesToSkip
+                    println("temperature-to-humidity done!")
                 }
                 "humidity-to-location map:" -> {
                     val (map, linesToSkip) =
                         parseMap(input.slice(index+1..<input.size), temperatureToHumidity.values.toList())
                     humidityToLocation = map
                     skipUntilLine = index+linesToSkip
+                    println("humidity-to-location done!")
                 }
             }
 
