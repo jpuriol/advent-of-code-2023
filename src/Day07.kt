@@ -32,7 +32,7 @@ fun main() {
     }
 
 
-    fun part2(input: List<String>): Long {
+    fun part2(input: List<String>): Int {
 
         val hands = input.map { Hand(it) }
 
@@ -45,8 +45,9 @@ fun main() {
                 .thenBy { it.cards[4].strengthP2 }
         ).mapIndexed { index, hand ->
             val rank = index + 1
-            rank.toLong() * hand.bid.toLong()
+            rank * hand.bid
         }.sum()
+
 
         return winnings
     }
@@ -54,7 +55,7 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day07_test")
-    check(part2(testInput) == 5905L)
+    check(part2(testInput) == 5905)
 
     val input = readInput("Day07")
     part1(input).println()
@@ -147,7 +148,7 @@ fun HandType(hand: List<Card>, part: Part = Part.ONE): HandType {
                 1 -> when(possibleType) {
                     HandType.FIVE_OF_A_KIND -> error("Impossible to have 5 of a kind with a joker")
                     HandType.FOUR_OF_A_KIND -> HandType.FIVE_OF_A_KIND
-                    HandType.FULL_HOUSE -> HandType.FOUR_OF_A_KIND
+                    HandType.FULL_HOUSE -> error("Impossible to have a full house with a joker")
                     HandType.THREE_OF_A_KIND -> HandType.FOUR_OF_A_KIND
                     HandType.TWO_PAIR -> HandType.FULL_HOUSE
                     HandType.ONE_PAIR -> HandType.THREE_OF_A_KIND
@@ -156,11 +157,11 @@ fun HandType(hand: List<Card>, part: Part = Part.ONE): HandType {
                 2 -> when(possibleType) {
                     HandType.FIVE_OF_A_KIND -> error("Impossible to have 5 of a kind with a joker")
                     HandType.FOUR_OF_A_KIND -> error("Impossible to have 4 of a kind with 2 jokers")
-                    HandType.FULL_HOUSE -> HandType.FIVE_OF_A_KIND
+                    HandType.FULL_HOUSE -> error("Impossible to have a full house with 2 jokers")
                     HandType.THREE_OF_A_KIND -> HandType.FIVE_OF_A_KIND
-                    HandType.TWO_PAIR -> HandType.FULL_HOUSE
+                    HandType.TWO_PAIR -> error("Impossible to have 2 pairs with 2 jokers")
                     HandType.ONE_PAIR -> HandType.FOUR_OF_A_KIND
-                    HandType.HIGH_CARD -> HandType.TWO_PAIR
+                    HandType.HIGH_CARD -> HandType.THREE_OF_A_KIND
                 }
                 3 -> when(possibleType) {
                     HandType.FIVE_OF_A_KIND -> error("Impossible to have 5 of a kind with a joker")
